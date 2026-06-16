@@ -2,5 +2,6 @@
 .venv
 __pychache__
 tools.cpython-310.pyc
+agent.cpython-310.pyc
 LLM.py
-tools.py
+questions.txt
