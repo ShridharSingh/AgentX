@@ -3,5 +3,6 @@
 __pychache__
 tools.cpython-310.pyc
 agent.cpython-310.pyc
+tools.cpython-312.pyc
 LLM.py
 questions.txt
