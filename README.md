@@ -1,18 +1,18 @@
-# Agent X
+# AgentX
 
-### Agent X is an AI agent that utilises tools to perform certain functions
+### AgentX is an AI agent that utilises tools to perform certain functions
 
-- Tools available to Agent X are still being developed and tested however you are free to have fun with whatever is supplied out-of-the-box
+- Tools available to AgentX are still being developed and tested however you are free to have fun with whatever is supplied out-of-the-box
 
-# Tools shipped with Agent X
+# Tools shipped with AgentX
 
-#### 1. Real-time Time and Date - `Have fun asking Agent X how old it is`
+#### 1. Real-time Time and Date - `Have fun asking AgentX how old it is`
 
-#### 2. Mathematical Calculation - `Ask Agent X to perform any mathematical ]calculation using plain-text`
+#### 2. Mathematical Calculation - `Ask AgentX to perform any mathematical ]calculation using plain-text`
 
-#### 3. Dummy weather data `(Ask agent X what the weather is like in prime cities)` (API integration to follow soon)
+#### 3. Dummy weather data `(Ask agentX what the weather is like in prime cities)` (API integration to follow soon)
 
-#### 4. Web search (In development) - `Ask Agent X to search the web for results`
+#### 4. Web search (In development) - `Ask AgentX to search the web for results`
 
 ## Pre-requisite software
 
@@ -29,7 +29,7 @@ Ensure you have the latest version of Python and Visual Studio Code installed
 Open a terminal and type the command
 
 ```
-git clone https://github.com/ShridharSingh/AI-Agent.git
+git clone https://github.com/ShridharSingh/AgentX.git
 ```
 
 ### Step 1 - Create the virtual environment
@@ -57,7 +57,7 @@ GROQ_API_KEY = "gsk-xxx"
 #### Step 4 - Run application
 
 ```
-python run app.py
+python run AgentX.py
 ```
 
 ## Future expansion
