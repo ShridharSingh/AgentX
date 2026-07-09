@@ -45,7 +45,7 @@ def run_agent(user_message: str, model: str):
         },
         {"role": "user", "content": user_message}
     ]
-    max_iterations = 2 
+    max_iterations = 0 
     iteration = 0
 
     while True:

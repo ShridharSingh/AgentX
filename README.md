@@ -1,22 +1,21 @@
 # AgentX
 
-### AgentX is an AI agent that utilises tools to perform certain functions
+### The Swiss Army Knife of AI Agents
 
-- Tools available to AgentX are still being developed and tested however you are free to have fun with whatever is supplied out-of-the-box
+###### AgentX is an AI agent that utilises a plethora of tools to perform various user-defined functions.
+
+###### \* Tools available to AgentX are in continuous development and testing to support the latest models and provide the smoothest functionality to the user. Feel free to have fun with whatever is supplied out-of-the-box and come back later for more tools.
 
 # Tools shipped with AgentX
 
-#### 1. Web search - `Ask AgentX to search the web for news, results, trends or anything really`
-
-#### 2. Real-time Time and Date - `Have fun asking AgentX how old it is`
-
-#### 3. Mathematical Calculation - `Ask AgentX to perform any mathematical calculation using plain-text`
-
-#### 4. Dummy weather data `Ask agentX what the weather is like in prime cities` (API integration to follow soon)
+- `Web search` - Ask AgentX to search the web for news, results, trends or anything really
+- `Real-time Time and Date` - Have fun asking AgentX how old it is
+- `Mathematical Calculation` - Ask AgentX to perform any mathematical calculation using plain-text
+- `Dummy weather data` - Ask agentX what the weather is like in prime cities (API integration to follow soon)
 
 ## NEW ADDITIONS to AgentX
 
-#### Model selection - `Users are now able to choose a compatible model to power AgentX`
+#### `Model selection` - Users are now able to choose a compatible model to power AgentX
 
 - Models are provided in the `models.py` file and range from lightweight to very powerful.
 - ALL models are free and work with AgentX - note that some models may work better than others depending on use cases
