@@ -1,4 +1,5 @@
 from datetime import datetime
+from ddgs import DDGS
 import math
 
 # ──── Tool definitions  ──────────────────────────────────────────────────────
@@ -53,14 +54,14 @@ tools = [
     {
     "type": "function",
     "function": {
-        "name": "search_web",
+        "name": "web_search",
         "description": "Searches the web and returns results. Use this when the user asks about current events, news, or anything you don't know.",
         "parameters": {
             "type": "object",
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "The search query, e.g. 'latest AI news 2025'"
+                    "description": "The search query, e.g. 'latest AI news 2026' or anything that has the word 'search' in it."
                 }
             },
             "required": ["query"]
@@ -90,3 +91,16 @@ def get_current_datetime() -> str:
     time = datetime.now()
     return time.strftime("Date: %A %d %B %Y | Time: %H:%M:%S")
 
+def web_search(query: str) -> str:
+    try:
+        results = DDGS().text(query, max_results=3)
+        if not results:
+            return "No results found."
+        output = ""
+        for r in results:
+            output += f"Title: {r['title']}\n"
+            output += f"Summary: {r['body']}\n"
+            output += f"URL: {r['href']}\n\n"
+        return output.strip()
+    except Exception as e:
+        return f"Web search error: {e}"

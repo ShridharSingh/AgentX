@@ -6,13 +6,31 @@
 
 # Tools shipped with AgentX
 
-#### 1. Real-time Time and Date - `Have fun asking AgentX how old it is`
+#### 1. Web search - `Ask AgentX to search the web for news, results, trends or anything really`
 
-#### 2. Mathematical Calculation - `Ask AgentX to perform any mathematical ]calculation using plain-text`
+#### 2. Real-time Time and Date - `Have fun asking AgentX how old it is`
 
-#### 3. Dummy weather data `(Ask agentX what the weather is like in prime cities)` (API integration to follow soon)
+#### 3. Mathematical Calculation - `Ask AgentX to perform any mathematical calculation using plain-text`
 
-#### 4. Web search (In development) - `Ask AgentX to search the web for results`
+#### 4. Dummy weather data `Ask agentX what the weather is like in prime cities` (API integration to follow soon)
+
+## NEW ADDITIONS to AgentX
+
+#### Model selection - `Users are now able to choose a compatible model to power AgentX`
+
+- Models are provided in the `models.py` file and range from lightweight to very powerful.
+- ALL models are free and work with AgentX - note that some models may work better than others depending on use cases
+- AgentX ships with a default model but this can be changed in the `models.py` file
+- Users are welcome to add their own models to the `MODELS` dictionary
+
+## Screenshots of AgentX in Action
+
+- AgentX model selection
+  ![image 1](assets/images/AgentX%20User%20Model%20Selection%20Options.png)
+- Using Llama 3.3 70b (Default)
+  ![image 1](assets/images/VS%20code%20output%20of%20AgentX%20web_search%20tool%20using%20llama3.png)
+- Using OpenAI GPT OSS 120b
+  ![image 2](assets/images/VS%20code%20output%20of%20AgentX%20web_search%20tool.png)
 
 ## Pre-requisite software
 
