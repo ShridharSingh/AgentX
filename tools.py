@@ -74,7 +74,8 @@ tools = [
 
 def calculate(expression: str) -> str:
     try:
-        result = eval(expression, {"__builtins__": {}}, vars(math))
+        safe_globals = {**vars(math), "math": math, "__builtins__": {}}
+        result = eval(expression, safe_globals)
         return str(result)
     except Exception as e:
         return f"Error: {e}"

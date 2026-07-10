@@ -2,84 +2,189 @@
 
 ### The Swiss Army Knife of AI Agents
 
-###### AgentX is an AI agent that utilises a plethora of tools to perform various user-defined functions.
+AgentX is a modular, extensible AI agent built on the Groq API.
+It uses a tool-calling loop to connect a large language model to
+real-world functions — web search, live datetime, mathematical
+calculation, and more — with model selection built in.
 
-###### \* Tools available to AgentX are in continuous development and testing to support the latest models and provide the smoothest functionality to the user. Feel free to have fun with whatever is supplied out-of-the-box and come back later for more tools.
+> Tools are in continuous development. New tools and models are
+> added regularly. Feel free to explore what ships out of the box
+> and check back for updates.
 
-# Tools shipped with AgentX
+---
 
-- `Web search` - Ask AgentX to search the web for news, results, trends or anything really
-- `Real-time Time and Date` - Have fun asking AgentX how old it is
-- `Mathematical Calculation` - Ask AgentX to perform any mathematical calculation using plain-text
-- `Dummy weather data` - Ask agentX what the weather is like in prime cities (API integration to follow soon)
+## How it works
 
-## NEW ADDITIONS to AgentX
+AgentX runs a tool-calling agent loop:
 
-#### `Model selection` - Users are now able to choose a compatible model to power AgentX
+1. Your message is added to a conversation history
+2. The LLM reads the full history and decides whether to call a
+   tool or respond directly
+3. If a tool is called, AgentX runs the corresponding Python
+   function locally and feeds the result back to the LLM
+4. The loop continues until the LLM has enough information to
+   produce a final answer
 
-- Models are provided in the `models.py` file and range from lightweight to very powerful.
-- ALL models are free and work with AgentX - note that some models may work better than others depending on use cases
-- AgentX ships with a default model but this can be changed in the `models.py` file
-- Users are welcome to add their own models to the `MODELS` dictionary
+The LLM never executes code — it only requests tool calls.
+AgentX handles all execution locally.
 
-## Screenshots of AgentX in Action
+---
 
-- AgentX model selection
-  ![image 1](assets/images/AgentX%20User%20Model%20Selection%20Options.png)
-- Using Llama 3.3 70b (Default)
-  ![image 1](assets/images/VS%20code%20output%20of%20AgentX%20web_search%20tool%20using%20llama3.png)
-- Using OpenAI GPT OSS 120b
-  ![image 2](assets/images/VS%20code%20output%20of%20AgentX%20web_search%20tool.png)
+## Tools shipped with AgentX
 
-## Pre-requisite software
+| Tool                   | Description                                         |
+| ---------------------- | --------------------------------------------------- |
+| `web_search`           | Live web search via DuckDuckGo — no API key needed  |
+| `get_current_datetime` | Real-time date and time from your system clock      |
+| `calculate`            | Natural language mathematical expressions           |
+| `get_weather`          | Weather data — dummy data now, live API coming soon |
 
-Ensure you have the latest version of Python and Visual Studio Code installed
+---
 
-##### Download Python here: https://www.python.org/downloads/
+## Model selection
 
-##### Download Visual Studio Code here: https://code.visualstudio.com/Download
+AgentX ships with multiple compatible models. At startup, you
+choose which model powers the agent for that session.
 
-## How to use:
+Models are defined in `models.py`. You can add your own by
+inserting an entry into the `MODELS` dictionary — no other
+changes required.
 
-### Step 0 - Clone the repository
+All models listed are free tier compatible via Groq.
 
-Open a terminal and type the command
+---
 
-```
+## Prerequisites
+
+- Python 3.10 or higher — https://www.python.org/downloads/
+- A free Groq API key — https://console.groq.com
+- Visual Studio Code (recommended) — https://code.visualstudio.com
+
+---
+
+## Installation
+
+**Step 1 — Clone the repository**
+
+```bash
 git clone https://github.com/ShridharSingh/AgentX.git
+cd AgentX
 ```
 
-### Step 1 - Create the virtual environment
+**Step 2 — Create a virtual environment**
 
-```
-python.exe -m venv .venv
-```
+```bash
+python -m venv .venv
 
-Tip: See why we create a virtual environment below
-
-### Step 2 - Install dependecies
-
-```
-pip install requirements.txt
+# Activate it:
+# Windows:
+.venv\Scripts\activate
+# Mac/Linux:
+source .venv/bin/activate
 ```
 
-### Step 3 - Input API Key
+> A virtual environment keeps AgentX's dependencies isolated from
+> your system Python installation, preventing version conflicts
+> across projects.
 
-Create a `.env` file in the project folder and enter your OpenAI API key as follows:
+**Step 3 — Install dependencies**
 
-```
-GROQ_API_KEY = "gsk-xxx"
-```
-
-#### Step 4 - Run application
-
-```
-python run AgentX.py
+```bash
+pip install -r requirements.txt
 ```
 
-## Future expansion
+**Step 4 — Add your API key**
 
-1. Further toolkit expansion
-2. User interface compatibility with `Streamlit`
-3. User choice of models
-4. `LangChain` integration
+Create a `.env` file in the project root:
+
+```
+GROQ_API_KEY="paste_your_gsk_key_here"
+```
+
+Get a free key at https://console.groq.com — no credit card required.
+
+> Make sure `.env` is listed in your `.gitignore` file so your
+> API key is never committed to the repository.
+
+**Step 5 — Verify your tools (recommended)**
+
+```bash
+python tool_verification.py
+```
+
+This tests every tool independently of the LLM. Run this any time
+you add a new tool or hit unexpected behaviour.
+
+**Step 6 — Run AgentX**
+
+```bash
+python AgentX.py
+```
+
+## Project structure
+
+```
+AgentX/
+├── AgentX.py              — Agent loop and entry point
+├── tools.py               — Tool definitions and Python functions
+├── models.py              — Compatible model registry
+├── tool_verification.py   — Standalone tool testing suite
+├── .env                   — Your API key (not committed to Git)
+├── requirements.txt       — Python dependencies
+└── assets/
+    └── images/            — Screenshots for documentation
+```
+
+## Roadmap
+
+- [x] Core agent loop with tool calling
+- [x] Web search via DuckDuckGo
+- [x] Real-time datetime tool
+- [x] Mathematical expression evaluator
+- [x] Multi-model selection at startup
+- [x] Standalone tool verification suite
+- [ ] Live weather API integration
+- [ ] Persistent chat history
+- [ ] Streamlit web interface
+- [ ] Expanded tool library
+
+---
+
+## Screenshots
+
+**Model selection at startup**
+
+<img src="assets/images/AgentX User Model Selection Options.png" 
+     alt="AgentX model selection menu at startup"
+     width="500"/>
+
+**Web search using Llama 3.3 70B (default)**
+
+<img src="assets/images/VS code output of AgentX web_search tool using llama3.png" 
+     alt="AgentX web search result using Llama 3.3 70B"
+     width="650"/>
+
+**Web search using GPT-OSS 120B**
+
+<img src="assets/images/VS code output of AgentX web_search tool.png" 
+     alt="AgentX web search result using GPT-OSS 120B"
+     width="650"/>
+
+---
+
+## Research context
+
+AgentX is developed alongside MSc research into trustworthy and
+Agentic AI systems. The project serves as a practical testbed for
+studying tool-calling reliability, agent loop design, and LLM
+failure modes in production-like environments.
+
+---
+
+## License
+
+© 2026 Shridhar Singh. All rights reserved.
+
+This project is proprietary software. No part of this codebase
+may be copied, modified, distributed, or used without explicit
+written permission from the author.
