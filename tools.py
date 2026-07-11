@@ -25,24 +25,6 @@ tools = [
             }
         }
     },
-
-    {
-        "type": "function",
-        "function": {
-            "name": "get_weather",
-            "description": "Returns mock weather info for a city.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "city": {
-                        "type": "string",
-                        "description": "The name of the city"
-                    }
-                },
-                "required": ["city"]
-            }
-        }
-    },
     {
         "type": "function",
         "function": {
@@ -104,14 +86,6 @@ def calculate(expression: str) -> str:
     except Exception as e:
         return f"Error: {e}"
 
-def get_weather(city: str) -> str:
-    mock_data = {
-        "london":   "Cloudy, 14°C",
-        "durban":   "Sunny, 27°C",
-        "new york": "Rainy, 18°C",
-    }
-    return mock_data.get(city.lower(), f"No weather data for {city}")
-
 DEFAULT_CITY = "Durban"
 def get_real_weather(city: str = DEFAULT_CITY) -> str:
     weather_client_key = os.getenv("OPENWEATHERMAP_API_KEY")
@@ -128,7 +102,6 @@ def get_real_weather(city: str = DEFAULT_CITY) -> str:
         return f"{city}: {description}, {temp}°C, humidity {humidity}%"
     except Exception as e:
         return f"Weather error: {e}"
-
 
 def get_current_datetime() -> str:
     time = datetime.now()

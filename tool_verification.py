@@ -4,8 +4,7 @@
 # HOW TO USE: type 'python tool_verification.py' in the terminal
 
 import traceback
-from tools import calculate, get_weather, get_current_datetime, web_search, get_real_weather
-import math
+from tools import calculate, get_current_datetime, web_search, get_real_weather
 
 # ── Colour helpers (work on Windows, Mac, Linux) ──────────────────────────────
 
@@ -91,20 +90,6 @@ def test_calculate():
         passed("Invalid expression -> correctly returned an error message")
     else:
         failed(f"Invalid expression -> should have returned error, got: {result}")
-
-def test_get_weather():
-    print(f"\n{CYAN}{BOLD}── get_weather ───────────────────────────────────{RESET}")
-    run_test("get_weather", "Known city — durban",       get_weather, "durban")
-    run_test("get_weather", "Known city — london",       get_weather, "london")
-    run_test("get_weather", "Known city — uppercase",    get_weather, "DURBAN")
-    run_test("get_weather", "Known city — mixed case",   get_weather, "London")
-    # Unknown city should return a message, not crash
-    result = get_weather("tokyo")
-    if result and isinstance(result, str) and "tokyo" in result.lower():
-        passed("Unknown city → returned graceful fallback message")
-    else:
-        failed(f"Unknown city → unexpected result: {result}")
-
 
 def test_get_current_datetime():
     print(f"\n{CYAN}{BOLD}── get_current_datetime ──────────────────────────{RESET}")
@@ -203,7 +188,6 @@ if __name__ == "__main__":
     print(f"  No API key required for most tools.")
 
     test_calculate()
-    test_get_weather()
     test_get_current_datetime()
     test_web_search()
     test_get_real_weather()

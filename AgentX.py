@@ -14,17 +14,15 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 # ── 2. Tool dispatcher ────────────────────────────────────────────────────────
 
 def run_tool(tool_name: str, tool_args: dict) -> str:
+    args = tool_args or {}
     if tool_name == "calculate":
-        return calculate(tool_args["expression"])
-    elif tool_name == "get_weather":
-        return get_weather(tool_args["city"])
+        return calculate(args.get("expression", ""))
     elif tool_name == "get_current_datetime":
         return get_current_datetime()
     elif tool_name == "web_search":
-        return web_search(tool_args["query"])
+        return web_search(args.get("query", ""))
     elif tool_name == "get_real_weather":
-        city = (tool_args or {}).get("city", DEFAULT_CITY)
-        return get_real_weather(city)
+        return get_real_weather(args.get("city", DEFAULT_CITY))
     else:
         return f"Unknown tool: {tool_name}"
 
