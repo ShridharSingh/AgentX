@@ -143,7 +143,7 @@ AgentX/
 - [x] Mathematical expression evaluator
 - [x] Multi-model selection at startup
 - [x] Standalone tool verification suite
-- [ ] Live weather API integration
+- [x] Live weather API integration
 - [ ] Persistent chat history
 - [ ] Streamlit web interface
 - [ ] Expanded tool library
