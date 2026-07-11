@@ -50,7 +50,7 @@ def run_agent(user_message: str, model: str):
         },
         {"role": "user", "content": user_message}
     ]
-    max_iterations = 0 
+    max_iterations = 1 
     iteration = 0
 
     while True:
@@ -108,7 +108,7 @@ def run_agent(user_message: str, model: str):
                     "tool_call_id": tool_call.id,
                     "content": result
                 })
-        else:
+        else: 
             final_answer = reply.content
             print(f"Agent: {final_answer}\n")
             return final_answer
