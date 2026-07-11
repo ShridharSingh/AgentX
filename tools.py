@@ -1,6 +1,9 @@
 from datetime import datetime
 from ddgs import DDGS
-import math
+from dotenv import load_dotenv
+import math, requests, os
+
+load_dotenv()
 
 # ──── Tool definitions  ──────────────────────────────────────────────────────
 
@@ -52,22 +55,43 @@ tools = [
         }
     },
     {
-    "type": "function",
-    "function": {
-        "name": "web_search",
-        "description": "Searches the web and returns results. Use this when the user asks about current events, news, or anything you don't know.",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string",
-                    "description": "The search query, e.g. 'latest AI news 2026' or anything that has the word 'search' in it."
-                }
-            },
-            "required": ["query"]
+        "type": "function",
+        "function": {
+            "name": "web_search",
+            "description": "Searches the web and returns results. Use this when the user asks about current events, news, or anything you don't know.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The search query, e.g. 'latest AI news 2026' or anything that has the word 'search' in it."
+                    }
+                },
+                "required": ["query"]
+            }
+        }   
+    },
+    {
+        
+        "type": "function",
+        "function": {
+            "name": "get_real_weather",
+            "description": """Returns real-time current weather for a city using 
+            the OpenWeatherMap API. Use this whenever the user asks about current weather 
+            or conditions outside. If the user does not specify a city, use the default 
+            city of Durban. Never guess weather conditions — always call this tool.""",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "city": {
+                        "type": "string",
+                        "description": "The name of the city to get weather for. Defaults to Durban if not specified by the user."
+                    }
+                },
+                "required": []
+            }
         }
     }
-}
 ]
 
 # ──── Python functions ─────────────────────────────────────────────────────────
@@ -87,6 +111,24 @@ def get_weather(city: str) -> str:
         "new york": "Rainy, 18°C",
     }
     return mock_data.get(city.lower(), f"No weather data for {city}")
+
+DEFAULT_CITY = "Durban"
+def get_real_weather(city: str = DEFAULT_CITY) -> str:
+    weather_client_key = os.getenv("OPENWEATHERMAP_API_KEY")
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={weather_client_key}&units=metric"
+
+    try:
+        response = requests.get(url)
+        data = response.json()
+        if data.get("cod") != 200:
+            return f"Could not find weather for {city}"
+        temp = data["main"]["temp"]
+        description = data["weather"][0]["description"]
+        humidity = data["main"]["humidity"]
+        return f"{city}: {description}, {temp}°C, humidity {humidity}%"
+    except Exception as e:
+        return f"Weather error: {e}"
+
 
 def get_current_datetime() -> str:
     time = datetime.now()

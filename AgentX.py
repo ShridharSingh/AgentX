@@ -22,6 +22,9 @@ def run_tool(tool_name: str, tool_args: dict) -> str:
         return get_current_datetime()
     elif tool_name == "web_search":
         return web_search(tool_args["query"])
+    elif tool_name == "get_real_weather":
+        city = (tool_args or {}).get("city", DEFAULT_CITY)
+        return get_real_weather(city)
     else:
         return f"Unknown tool: {tool_name}"
 
@@ -36,12 +39,16 @@ def run_agent(user_message: str, model: str):
         RULES — follow these without exception:
         - For the current date or time: ALWAYS call get_current_datetime. Never answer from memory.
         - For any maths: ALWAYS call calculate. Never calculate in your head.
-        - For weather: ALWAYS call get_weather. Never guess.
+        - For weather: ALWAYS call get_real_weather. Never guess.
+        - For weather questions that include 'right now', 'currently', or 
+        'at this moment', call get_current_datetime first, then call 
+        get_real_weather, and combine both results into one answer.
         - For current news, sports, rankings, or anything you are unsure about: ALWAYS call web_search.
         - After you receive the results from a tool, you MUST write a final answer to the user in plain text.
         - Do NOT call the same tool twice in a row for the same query.
         - Do NOT keep calling tools if you already have enough information to answer.
-        - Always tell the user which tool you used."""
+        - Always tell the user which tool you used.
+        """
         },
         {"role": "user", "content": user_message}
     ]

@@ -4,7 +4,7 @@
 # HOW TO USE: type 'python tool_verification.py' in the terminal
 
 import traceback
-from tools import calculate, get_weather, get_current_datetime, web_search
+from tools import calculate, get_weather, get_current_datetime, web_search, get_real_weather
 import math
 
 # ── Colour helpers (work on Windows, Mac, Linux) ──────────────────────────────
@@ -143,6 +143,26 @@ def test_web_search():
             else:
                 failed(f"Format check - {check_name} | Got: {result[:200]}")
 
+def test_get_real_weather():
+    print(f"\n{CYAN}{BOLD}── get_real_weather ──────────────────────────────{RESET}")
+    
+    # Check API key is configured before running any tests
+    import os
+    if not os.getenv("OPENWEATHERMAP_API_KEY"):
+        print(f"  {YELLOW}⚠ SKIP{RESET}   OPENWEATHERMAP_API_KEY not found in .env — skipping live tests")
+        return
+    
+    run_test("get_real_weather", "Default city — Durban",     get_real_weather)
+    run_test("get_real_weather", "Explicit city — London",    get_real_weather, "London")
+    run_test("get_real_weather", "Explicit city — New York",  get_real_weather, "New York")
+    
+    # Invalid city should return graceful message not a crash
+    result = get_real_weather("NotARealCityXYZ123")
+    if "could not find" in result.lower() or "error" in result.lower():
+        passed("Invalid city → returned graceful error message")
+    else:
+        failed(f"Invalid city → unexpected result: {result}")
+
 
 # ── Summary report ────────────────────────────────────────────────────────────
 
@@ -186,5 +206,6 @@ if __name__ == "__main__":
     test_get_weather()
     test_get_current_datetime()
     test_web_search()
+    test_get_real_weather()
 
     print_summary()
