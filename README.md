@@ -32,12 +32,12 @@ AgentX handles all execution locally.
 
 ## Tools shipped with AgentX
 
-| Tool                   | Description                                         |
-| ---------------------- | --------------------------------------------------- |
-| `web_search`           | Live web search via DuckDuckGo — no API key needed  |
-| `get_current_datetime` | Real-time date and time from your system clock      |
-| `calculate`            | Natural language mathematical expressions           |
-| `get_weather`          | Weather data — dummy data now, live API coming soon |
+| Tool                   | Description                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------- |
+| `web_search`           | Live web search via DuckDuckGo — no API key needed                           |
+| `get_current_datetime` | Real-time date and time from your system clock                               |
+| `calculate`            | Natural language mathematical expressions                                    |
+| `get_real_weather`     | Live weather via OpenWeatherMap API — temperature, description, and humidity |
 
 ---
 
@@ -131,6 +131,8 @@ AgentX/
 ├── tool_verification.py   — Standalone tool testing suite
 ├── .env                   — Your API key (not committed to Git)
 ├── requirements.txt       — Python dependencies
+├── LICENSE
+├── README.md
 └── assets/
     └── images/            — Screenshots for documentation
 ```
