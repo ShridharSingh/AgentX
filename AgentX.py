@@ -1,10 +1,11 @@
-from groq import Groq
-import math
 import json
-from dotenv import load_dotenv
 import os
-from tools import *
+
+from dotenv import load_dotenv
+from groq import Groq
+
 from models import choose_model
+from tools import *
 
 # ── 1. Connect to Groq ────────────────────────────────────────────────────────
 
@@ -12,6 +13,7 @@ load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 # ── 2. Tool dispatcher ────────────────────────────────────────────────────────
+
 
 def run_tool(tool_name: str, tool_args: dict) -> str:
     args = tool_args or {}
@@ -26,13 +28,17 @@ def run_tool(tool_name: str, tool_args: dict) -> str:
     else:
         return f"Unknown tool: {tool_name}"
 
+
 # ── 3. Agent loop ─────────────────────────────────────────────────────────────
+
 
 def run_agent(user_message: str, model: str):
     print(f"\nUser: {user_message}\n")
 
     messages = [
-        {"role": "system", "content": """You are a helpful AI assistant with access to tools.
+        {
+            "role": "system",
+            "content": """You are a helpful AI assistant with access to tools.
 
         RULES — follow these without exception:
         - For the current date or time: ALWAYS call get_current_datetime. Never answer from memory.
@@ -46,20 +52,22 @@ def run_agent(user_message: str, model: str):
         - Do NOT call the same tool twice in a row for the same query.
         - Do NOT keep calling tools if you already have enough information to answer.
         - Always tell the user which tool you used.
-        """
+        """,
         },
-        {"role": "user", "content": user_message}
+        {"role": "user", "content": user_message},
     ]
-    max_iterations = 1 
+    max_iterations = 1
     iteration = 0
 
     while True:
         if iteration >= max_iterations:
-            print(f"[Max interations reached - forcing final answer]\n")
-            messages.append({
-                "role": "user",
-                "content": "You have already gathered enough information. Stop calling tools and write your final answer to the user now."
-            })
+            print("[Max interations reached - forcing final answer]\n")
+            messages.append(
+                {
+                    "role": "user",
+                    "content": "You have already gathered enough information. Stop calling tools and write your final answer to the user now.",
+                }
+            )
             iteration += 1
 
         response = client.chat.completions.create(
@@ -72,17 +80,17 @@ def run_agent(user_message: str, model: str):
         reply = response.choices[0].message
         reply_dict = {"role": "assistant", "content": reply.content or ""}
 
-        if reply.tool_calls: 
+        if reply.tool_calls:
             reply_dict["tool_calls"] = [
                 {
                     "id": tc.id,
                     "type": "function",
                     "function": {
                         "name": tc.function.arguments,
-                        "arguments": tc.function.arguments or "{}"
-                    }
+                        "arguments": tc.function.arguments or "{}",
+                    },
                 }
-                 for tc in reply.tool_calls
+                for tc in reply.tool_calls
             ]
         messages.append(reply_dict)
 
@@ -91,7 +99,6 @@ def run_agent(user_message: str, model: str):
             for tool_call in reply.tool_calls:
                 tool_name = tool_call.function.name
                 tool_args = json.loads(tool_call.function.arguments or "{}")
-
 
                 print(f"  Calling tool : {tool_name}")
                 print(f"  With inputs  : {tool_args}")
@@ -103,20 +110,18 @@ def run_agent(user_message: str, model: str):
 
                 print(f"  Result       : {result}\n")
 
-                messages.append({
-                    "role": "tool",
-                    "tool_call_id": tool_call.id,
-                    "content": result
-                })
-        else: 
+                messages.append(
+                    {"role": "tool", "tool_call_id": tool_call.id, "content": result}
+                )
+        else:
             final_answer = reply.content
             print(f"Agent: {final_answer}\n")
             return final_answer
 
+
 # ── 4. Run it ─────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-
     selected_model = choose_model()
 
     print(" Chat is continuous. Type 'quit' or 'exit' or 'bye' to end chat.\n")

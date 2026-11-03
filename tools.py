@@ -1,7 +1,10 @@
+import math
+import os
 from datetime import datetime
+
+import requests
 from ddgs import DDGS
 from dotenv import load_dotenv
-import math, requests, os
 
 load_dotenv()
 
@@ -18,23 +21,20 @@ tools = [
                 "properties": {
                     "expression": {
                         "type": "string",
-                        "description": "A valid Python math expression, e.g. '47 * 83' or '47 multiplied by 83' or '(100 / 4) ** 2'"
+                        "description": "A valid Python math expression, e.g. '47 * 83' or '47 multiplied by 83' or '(100 / 4) ** 2'",
                     }
                 },
-                "required": ["expression"]
-            }
-        }
+                "required": ["expression"],
+            },
+        },
     },
     {
         "type": "function",
         "function": {
             "name": "get_current_datetime",
             "description": "Returns the REAL current date and time from the system clock. ALWAYS use this — never guess the date from memory.",
-            "parameters": {
-                "type": "object",
-                "properties": {}
-            }
-        }
+            "parameters": {"type": "object", "properties": {}},
+        },
     },
     {
         "type": "function",
@@ -46,15 +46,14 @@ tools = [
                 "properties": {
                     "query": {
                         "type": "string",
-                        "description": "The search query, e.g. 'latest AI news 2026' or anything that has the word 'search' in it."
+                        "description": "The search query, e.g. 'latest AI news 2026' or anything that has the word 'search' in it.",
                     }
                 },
-                "required": ["query"]
-            }
-        }   
+                "required": ["query"],
+            },
+        },
     },
     {
-        
         "type": "function",
         "function": {
             "name": "get_real_weather",
@@ -67,16 +66,17 @@ tools = [
                 "properties": {
                     "city": {
                         "type": "string",
-                        "description": "The name of the city to get weather for. Defaults to Durban if not specified by the user."
+                        "description": "The name of the city to get weather for. Defaults to Durban if not specified by the user.",
                     }
                 },
-                "required": []
-            }
-        }
-    }
+                "required": [],
+            },
+        },
+    },
 ]
 
 # ──── Python functions ─────────────────────────────────────────────────────────
+
 
 def calculate(expression: str) -> str:
     try:
@@ -86,7 +86,10 @@ def calculate(expression: str) -> str:
     except Exception as e:
         return f"Error: {e}"
 
+
 DEFAULT_CITY = "Durban"
+
+
 def get_real_weather(city: str = DEFAULT_CITY) -> str:
     weather_client_key = os.getenv("OPENWEATHERMAP_API_KEY")
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={weather_client_key}&units=metric"
@@ -103,9 +106,11 @@ def get_real_weather(city: str = DEFAULT_CITY) -> str:
     except Exception as e:
         return f"Weather error: {e}"
 
+
 def get_current_datetime() -> str:
     time = datetime.now()
     return time.strftime("Date: %A %d %B %Y | Time: %H:%M:%S")
+
 
 def web_search(query: str) -> str:
     try:
