@@ -91,12 +91,11 @@ def test_calculate():
     print(f"\n{CYAN}{BOLD}── calculate ─────────────────────────────────────{RESET}")
     run_test("calculate", "Basic multiplication", calculate, "47 * 83")
     run_test("calculate", "Square root - math.sqrt()", calculate, "math.sqrt(144)")
-    run_test("calculate", "Square root - squrt()", calculate, "sqrt(144)")
+    run_test("calculate", "Square root - sqrt()", calculate, "sqrt(144)")
     run_test("calculate", "Order of operations", calculate, "(100 + 50) * 2")
     run_test("calculate", "Division", calculate, "200 / 8")
     run_test("calculate", "Power", calculate, "2 ** 10")
-    run_test("calculate", "Invalid expression", calculate, "not_a_number * 5")
-    # Note: the last test expects an error message - that is the CORRECT behaviour for an invalid output, so we check it manually
+    # Invalid input should return an error message - that is the CORRECT behaviour for an invalid output, so we check it manually
     result = calculate("not_a_number * 5")
 
     if result.lower().startswith("error"):
