@@ -152,28 +152,6 @@ AgentX/
 
 ---
 
-## Screenshots
-
-**Model selection at startup**
-
-<img src="assets/images/AgentX User Model Selection Options.png" 
-     alt="AgentX model selection menu at startup"
-     width="500"/>
-
-**Web search using Llama 3.3 70B (default)**
-
-<img src="assets/images/VS code output of AgentX web_search tool using llama3.png" 
-     alt="AgentX web search result using Llama 3.3 70B"
-     width="650"/>
-
-**Web search using GPT-OSS 120B**
-
-<img src="assets/images/VS code output of AgentX web_search tool.png" 
-     alt="AgentX web search result using GPT-OSS 120B"
-     width="650"/>
-
----
-
 ## Research context
 
 AgentX is developed alongside MSc research into trustworthy and
