@@ -3,18 +3,14 @@
 
 MODELS = {
     "1": {
-        "label": "Llama 3.3 70B (Groq) - default, fast, free",
-        "id": "llama-3.3-70b-versatile",
-    },
-    "2": {
         "label": "GPT-OSS 120B (Groq) - most compatible, free",
         "id": "openai/gpt-oss-120b",
     },
-    "3": {
-        "label": "Qwen 3.6 27B (Groq) - lightweight alternative, free",
-        "id": "qwen/qwen3.6-27b",
+    "2": {
+        "label": "Qwen 3.8 27B (Groq) - lightweight alternative, free",
+        "id": "qwen/qwen3.8-27b",
     },
-    "4": {
+    "3": {
         "label": "GPT-OSS 20B (Groq) - fastest, smallest, free",
         "id": "openai/gpt-oss-20b",
     },
