@@ -1,7 +1,11 @@
-# Tool Verification Programme
-# Run this file any time you add a new tool or encounter an unexpected bug.
-# It tests every tool directly - without requiring LLM or API calls.
-# HOW TO USE: type 'python tool_verification.py' in the terminal
+"""Tool verification suite for AgentX.
+
+Tests each tool directly, without calling the LLM, using both valid and
+invalid inputs, and prints a pass/fail summary.
+
+Run this file whenever you add a new tool or hit an unexpected bug:
+    python tool_verification.py
+"""
 
 import traceback
 
@@ -18,14 +22,17 @@ BOLD = "\033[1m"
 
 
 def passed(msg):
+    """Print a green PASS line."""
     print(f"  {GREEN}✔ PASS{RESET}  {msg}")
 
 
 def failed(msg):
+    """Print a red FAIL line."""
     print(f"  {RED}✖ FAIL{RESET}  {msg}")
 
 
 def info(msg):
+    """Print a yellow detail line, such as a test's output."""
     print(f"  {YELLOW}→{RESET}      {msg}")
 
 
@@ -35,18 +42,21 @@ results = []  # collects (tool_name, test_name, passed: bool) for the summary
 
 
 def run_test(tool_name: str, test_name: str, fn, *args, **kwargs):
-    """
-    Runs a single test case.
-    fn      - the tool function to call
-    args    - positional arguments to pass to fn
-    kwargs  - keyword arguments to pass to fn
+    """Run a single test case and record the result.
 
-    A test passes if:
-        1. The function does not raise an exception
-        2. The return value is a non-empty string
-        3. The return value does not start with "Error:"
-    """
+    Args:
+        tool_name: Name of the tool being tested, used for the summary.
+        test_name: Short description of this test case.
+        fn: The tool function to call.
+        *args: Positional arguments passed to fn.
+        **kwargs: Keyword arguments passed to fn.
 
+    A test passes if the function:
+        1. Does not raise an exception
+        2. Does not return None
+        3. Returns a non-empty string
+        4. Returns output that does not start with "error"
+    """
     try:
         result = fn(*args, **kwargs)
 
@@ -88,6 +98,7 @@ def run_test(tool_name: str, test_name: str, fn, *args, **kwargs):
 
 
 def test_calculate():
+    """Test calculate with valid expressions and one invalid expression."""
     print(f"\n{CYAN}{BOLD}── calculate ─────────────────────────────────────{RESET}")
     run_test("calculate", "Basic multiplication", calculate, "47 * 83")
     run_test("calculate", "Square root - math.sqrt()", calculate, "math.sqrt(144)")
@@ -95,7 +106,7 @@ def test_calculate():
     run_test("calculate", "Order of operations", calculate, "(100 + 50) * 2")
     run_test("calculate", "Division", calculate, "200 / 8")
     run_test("calculate", "Power", calculate, "2 ** 10")
-    # Invalid input should return an error message - that is the CORRECT behaviour for an invalid output, so we check it manually
+    # Invalid input should return an error message - that is the CORRECT behaviour, so we check it manually
     result = calculate("not_a_number * 5")
 
     if result.lower().startswith("error"):
@@ -105,6 +116,7 @@ def test_calculate():
 
 
 def test_get_current_datetime():
+    """Test that get_current_datetime returns the expected date and time format."""
     print(f"\n{CYAN}{BOLD}── get_current_datetime ──────────────────────────{RESET}")
     run_test("get_current_datetime", "Returns a string", get_current_datetime)
     # Check the output contains expected date components
@@ -123,6 +135,7 @@ def test_get_current_datetime():
 
 
 def test_web_search():
+    """Test web_search with sample queries and check the result format."""
     print(f"\n{CYAN}{BOLD}── web_search ────────────────────────────────────{RESET}")
     run_test("web_search", "Basic query", web_search, "Python programming language")
     run_test("web_search", "News query", web_search, "latest AI news 2026")
@@ -146,6 +159,11 @@ def test_web_search():
 
 
 def test_get_real_weather():
+    """Test get_real_weather against the live OpenWeatherMap API.
+
+    Skips all tests if OPENWEATHERMAP_API_KEY is not set. Checks the default
+    city, explicit cities, and that an invalid city returns a graceful message.
+    """
     print(f"\n{CYAN}{BOLD}── get_real_weather ──────────────────────────────{RESET}")
 
     # Check API key is configured before running any tests
@@ -175,6 +193,7 @@ def test_get_real_weather():
 
 
 def print_summary():
+    """Print a per-tool pass/fail summary of all recorded results."""
     print(f"\n{BOLD}{'=' * 50}{RESET}")
     print(f"{BOLD} VERIFICATION SUMMARY{RESET}")
     print(f"{BOLD}{'=' * 50}{RESET}")
