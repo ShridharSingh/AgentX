@@ -86,7 +86,7 @@ def run_agent(user_message: str, model: str):
                     "id": tc.id,
                     "type": "function",
                     "function": {
-                        "name": tc.function.arguments,
+                        "name": tc.function.name,
                         "arguments": tc.function.arguments or "{}",
                     },
                 }
@@ -106,7 +106,7 @@ def run_agent(user_message: str, model: str):
                 result = run_tool(tool_name, tool_args)
 
                 if result is None:
-                    resut = "Tool returned no results."
+                    result = "Tool returned no results."
 
                 print(f"  Result       : {result}\n")
 
