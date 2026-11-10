@@ -7,6 +7,7 @@ Run this file whenever you add a new tool or hit an unexpected bug:
     python tool_verification.py
 """
 
+import os
 import traceback
 from datetime import datetime
 
@@ -176,9 +177,6 @@ def test_get_real_weather():
     city, explicit cities, and that an invalid city returns a graceful message.
     """
     print(f"\n{CYAN}{BOLD}── get_real_weather ──────────────────────────────{RESET}")
-
-    # Check API key is configured before running any tests
-    import os
 
     if not os.getenv("OPENWEATHERMAP_API_KEY"):
         print(
