@@ -8,6 +8,7 @@ Run this file whenever you add a new tool or hit an unexpected bug:
 """
 
 import traceback
+from datetime import datetime
 
 from tools import calculate, get_current_datetime, get_real_weather, web_search
 
@@ -61,7 +62,7 @@ def run_test(tool_name: str, test_name: str, fn, *args, **kwargs):
         result = fn(*args, **kwargs)
 
         # Check 1 - must return something
-        if results is None:
+        if result is None:
             failed(f"{test_name} -> returned None (missing return statement?)")
             results.append((tool_name, test_name, False))
             return
@@ -85,11 +86,11 @@ def run_test(tool_name: str, test_name: str, fn, *args, **kwargs):
             return
 
         passed(f"{test_name}")
-        info(f"Output: {result[:20]}{'...' if len(result) > 120 else ''}")
+        info(f"Output: {result[:120]}{'...' if len(result) > 120 else ''}")
         results.append((tool_name, test_name, True))
 
     except Exception:
-        failed("{test_name}-> raised an exception.")
+        failed(f"{test_name} -> raised an exception.")
         print(f"{RED}{traceback.format_exc()}{RESET}")
         results.append((tool_name, test_name, False))
 
@@ -116,22 +117,32 @@ def test_calculate():
 
 
 def test_get_current_datetime():
-    """Test that get_current_datetime returns the expected date and time format."""
+    """Test that get_current_datetime returns the current date and time in the expected format.
+
+    Reads the system clock before and after calling the tool and checks that
+    the tool's reported time falls between them, so a delay or a change of
+    day during the test cannot cause a false failure.
+    """
     print(f"\n{CYAN}{BOLD}── get_current_datetime ──────────────────────────{RESET}")
     run_test("get_current_datetime", "Returns a string", get_current_datetime)
-    # Check the output contains expected date components
+
+    test_name = "Date and time are correctly formatted and current"
+    before = datetime.now().replace(microsecond=0)
     result = get_current_datetime()
-    if result:
-        checks = {
-            "Contains 'Date:'": "Date:" in result,
-            "Contains 'Time:'": "Time:" in result,
-            "Contains year": "2026" in result or "2025" in result,
-        }
-        for check_name, check_result in checks.items():
-            if check_result:
-                passed(f"Format check — {check_name}")
-            else:
-                failed(f"Format check — {check_name} | Got: {result}")
+    after = datetime.now()
+
+    try:
+        tool_time = datetime.strptime(result, "Date: %A %d %B %Y | Time: %H:%M:%S")
+        ok = before <= tool_time <= after
+        if ok:
+            passed(test_name)
+        else:
+            failed(f"{test_name} -> time outside expected window, got: {result}")
+    except (ValueError, TypeError):
+        ok = False
+        failed(f"{test_name} -> wrong format, got: {result}")
+
+    results.append(("get_current_datetime", test_name, ok))
 
 
 def test_web_search():
