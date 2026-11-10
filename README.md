@@ -58,6 +58,7 @@ All models listed are free tier compatible via Groq.
 
 - Python 3.10 or higher — https://www.python.org/downloads/
 - A free Groq API key — https://console.groq.com
+- A free OpenWeatherMap API key — https://openweathermap.org/api
 - Visual Studio Code (recommended) — https://code.visualstudio.com
 
 ---
@@ -93,18 +94,22 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**Step 4 — Add your API key**
+**Step 4 — Add your API keys**
 
 Create a `.env` file in the project root:
 
 ```
 GROQ_API_KEY="paste_your_gsk_key_here"
+OPENWEATHERMAP_API_KEY="paste_your_openweathermap_key_here"
 ```
 
-Get a free key at https://console.groq.com — no credit card required.
+- Groq key: https://console.groq.com — free, no credit card required
+- OpenWeatherMap key: https://openweathermap.org/api — free tier; new keys can take a while to activate
 
-> Make sure `.env` is listed in your `.gitignore` file so your
-> API key is never committed to the repository.
+Without the OpenWeatherMap key, AgentX still runs, but weather requests will fail and the weather tests will be skipped.
+
+> `.env` is already excluded via `.gitignore`, so your API keys
+> are never committed to the repository.
 
 **Step 5 — Verify your tools (recommended)**
 
@@ -121,21 +126,24 @@ you add a new tool or hit unexpected behaviour.
 python AgentX.py
 ```
 
+---
+
 ## Project structure
 
 ```
 AgentX/
+├── .gitignore             — Keeps .env and .venv out of Git
+├── .env                   — Your API keys (not committed to Git)
 ├── AgentX.py              — Agent loop and entry point
 ├── tools.py               — Tool definitions and Python functions
 ├── models.py              — Compatible model registry
 ├── tool_verification.py   — Standalone tool testing suite
-├── .env                   — Your API key (not committed to Git)
 ├── requirements.txt       — Python dependencies
 ├── LICENSE
-├── README.md
-└── assets/
-    └── images/            — Screenshots for documentation
+└── README.md
 ```
+
+---
 
 ## Roadmap
 
