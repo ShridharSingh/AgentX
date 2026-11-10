@@ -56,7 +56,7 @@ tools = [
     {
         "type": "function",
         "function": {
-            "name": "get_real_weather",
+            "name": "get_weather",
             "description": """Returns real-time current weather for a city using 
             the OpenWeatherMap API. Use this whenever the user asks about current weather 
             or conditions outside. If the user does not specify a city, use the default 
@@ -90,7 +90,7 @@ def calculate(expression: str) -> str:
 DEFAULT_CITY = "Durban"
 
 
-def get_real_weather(city: str = DEFAULT_CITY) -> str:
+def get_weather(city: str = DEFAULT_CITY) -> str:
     weather_client_key = os.getenv("OPENWEATHERMAP_API_KEY")
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={weather_client_key}&units=metric"
 

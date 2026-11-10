@@ -37,7 +37,7 @@ AgentX handles all execution locally.
 | `web_search`           | Live web search via DuckDuckGo — no API key needed                           |
 | `get_current_datetime` | Real-time date and time from your system clock                               |
 | `calculate`            | Natural language mathematical expressions                                    |
-| `get_real_weather`     | Live weather via OpenWeatherMap API — temperature, description, and humidity |
+| `get_weather`          | Live weather via OpenWeatherMap API — temperature, description, and humidity |
 
 ---
 

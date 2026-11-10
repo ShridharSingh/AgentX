@@ -11,7 +11,7 @@ import os
 import traceback
 from datetime import datetime
 
-from tools import calculate, get_current_datetime, get_real_weather, web_search
+from tools import calculate, get_current_datetime, get_weather, web_search
 
 # ── Colour helpers (work on Windows, Mac, Linux) ──────────────────────────────
 
@@ -170,13 +170,13 @@ def test_web_search():
                 failed(f"Format check - {check_name} | Got: {result[:200]}")
 
 
-def test_get_real_weather():
-    """Test get_real_weather against the live OpenWeatherMap API.
+def test_get_weather():
+    """Test get_weather against the live OpenWeatherMap API.
 
     Skips all tests if OPENWEATHERMAP_API_KEY is not set. Checks the default
     city, explicit cities, and that an invalid city returns a graceful message.
     """
-    print(f"\n{CYAN}{BOLD}── get_real_weather ──────────────────────────────{RESET}")
+    print(f"\n{CYAN}{BOLD}── get_weather ───────────────────────────────────{RESET}")
 
     if not os.getenv("OPENWEATHERMAP_API_KEY"):
         print(
@@ -184,14 +184,12 @@ def test_get_real_weather():
         )
         return
 
-    run_test("get_real_weather", "Default city — Durban", get_real_weather)
-    run_test("get_real_weather", "Explicit city — London", get_real_weather, "London")
-    run_test(
-        "get_real_weather", "Explicit city — New York", get_real_weather, "New York"
-    )
+    run_test("get_weather", "Default city — Durban", get_weather)
+    run_test("get_weather", "Explicit city — London", get_weather, "London")
+    run_test("get_weather", "Explicit city — New York", get_weather, "New York")
 
     # Invalid city should return graceful message not a crash
-    result = get_real_weather("NotARealCityXYZ123")
+    result = get_weather("NotARealCityXYZ123")
     if "could not find" in result.lower() or "error" in result.lower():
         passed("Invalid city → returned graceful error message")
     else:
@@ -247,6 +245,6 @@ if __name__ == "__main__":
     test_calculate()
     test_get_current_datetime()
     test_web_search()
-    test_get_real_weather()
+    test_get_weather()
 
     print_summary()
