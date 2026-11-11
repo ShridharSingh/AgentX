@@ -5,7 +5,14 @@ from dotenv import load_dotenv
 from groq import BadRequestError, Groq
 
 from models import choose_model
-from tools import *
+from tools import (
+    DEFAULT_CITY,
+    calculate,
+    get_current_datetime,
+    get_weather,
+    tools,
+    web_search,
+)
 
 # ── 1. Connect to Groq ────────────────────────────────────────────────────────
 
