@@ -2,7 +2,7 @@ import json
 import os
 
 from dotenv import load_dotenv
-from groq import Groq
+from groq import BadRequestError, Groq
 
 from models import choose_model
 from tools import *
@@ -56,31 +56,45 @@ def run_agent(user_message: str, model: str):
         },
         {"role": "user", "content": user_message},
     ]
-    max_iterations = 1
+    max_iterations = 5
     iteration = 0
 
     while True:
-        if iteration >= max_iterations:
-            print("[Max interations reached - forcing final answer]\n")
+        force_answer = iteration >= max_iterations
+        # Once the limit is reached, forbid tool calls so the model must answer in text
+        if force_answer:
+            print("[Max iterations reached - forcing final answer]\n")
             messages.append(
                 {
                     "role": "user",
                     "content": "You have already gathered enough information. Stop calling tools and write your final answer to the user now.",
                 }
             )
-            iteration += 1
-
-        response = client.chat.completions.create(
-            model=model,
-            messages=messages,
-            tools=tools,
-            tool_choice="auto",
-        )
+            # Send no tools in the forced round: some models ignore tool_choice="none"
+            try:
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=messages,
+                )
+            except BadRequestError:
+                final_answer = "I couldn't complete this request within the tool-call limit. Please try rephrasing your question."
+                print(f"Agent: {final_answer}\n")
+                return final_answer
+        else:
+            response = client.chat.completions.create(
+                model=model,
+                messages=messages,
+                tools=tools,
+                tool_choice="auto",
+            )
 
         reply = response.choices[0].message
+        # Act on tool calls only if the model requested them and the limit hasn't been reached
+        use_tools = bool(reply.tool_calls) and not force_answer
         reply_dict = {"role": "assistant", "content": reply.content or ""}
 
-        if reply.tool_calls:
+        # Record the tool calls in the history so each tool result can be matched to its call by id
+        if use_tools:
             reply_dict["tool_calls"] = [
                 {
                     "id": tc.id,
@@ -94,7 +108,8 @@ def run_agent(user_message: str, model: str):
             ]
         messages.append(reply_dict)
 
-        if reply.tool_calls:
+        # Run each requested tool and add its result to the conversation history
+        if use_tools:
             print("Agent is using tools...\n")
             for tool_call in reply.tool_calls:
                 tool_name = tool_call.function.name
@@ -113,6 +128,7 @@ def run_agent(user_message: str, model: str):
                 messages.append(
                     {"role": "tool", "tool_call_id": tool_call.id, "content": result}
                 )
+            iteration += 1  # One round of tool calls completed
         else:
             final_answer = reply.content
             print(f"Agent: {final_answer}\n")
